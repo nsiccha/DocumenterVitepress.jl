@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "line": {
+    "repo": "nsiccha/DocumenterVitepress.jl",
+    "ref": "dogfood",
+    "sha": "cfb6935884562fabce841b801bb1fe122ffd1833"
+  },
+  "upstream": {
+    "repo": "LuxDL/DocumenterVitepress.jl",
+    "ref": "main",
+    "sha": "2f44a1e2362ff6106c819b8aa79826565c8870a7"
+  },
+  "prepared_at": "2026-11-18T12:00:08Z",
+  "problems": [
+    {
+      "id": "html-backslashes",
+      "role": "fix",
+      "title": "Preserve backslashes in HTML rendered by Julia examples",
+      "summary": "HTML output is embedded in a JavaScript template literal. Literal backslashes can disappear or make the VitePress build reject the page.",
+      "repairs": [],
+      "upstream_refs": [
+        {
+          "url": "https://github.com/LuxDL/DocumenterVitepress.jl/issues/407",
+          "relation": "reports"
+        },
+        {
+          "url": "https://github.com/LuxDL/DocumenterVitepress.jl/pull/408",
+          "relation": "fixes"
+        }
+      ],
+      "fix": {
+        "branch": "dogfood",
+        "commits": [
+          {
+            "sha": "cfb6935884562fabce841b801bb1fe122ffd1833",
+            "title": "Escape HTML output for the Vue template literal",
+            "original": [
+              "cfb6935884562fabce841b801bb1fe122ffd1833"
+            ]
+          }
+        ],
+        "why_together": "One commit changes the HTML writer and adds regression coverage for plain HTML and inline scripts."
+      },
+      "depends_on": [],
+      "requires": [],
+      "validation": [
+        {
+          "base": "2f44a1e2362ff6106c819b8aa79826565c8870a7",
+          "tests": [
+            "test/runtests.jl — text/html output escaping for the v-html template literal"
+          ],
+          "result": "passed",
+          "detail": "All 5 output assertions passed. A full documentation site build was outside this run. Tested dogfood commit cfb6935884562fabce841b801bb1fe122ffd1833.",
+          "julia": "1.10.12"
+        }
+      ],
+      "draft": {
+        "title": "Preserve backslashes in HTML rendered by Julia examples",
+        "body": "With DocumenterVitepress 0.3.9, put this Julia expression in a Documenter `@example` block and build with the VitePress writer.\n\n```julia\nHTML(raw\"<code>\\d+</code>\")\n```\n\nThe rendered code should display `\\d+`, including its backslash. The generated JavaScript template instead consumes the backslash and the page displays `d+`. A numeric backreference in example output can also stop the build.\n\nEscape backslashes before handling backticks and dollar signs in the HTML writer. This preserves the original HTML through Vue compilation. The existing report and proposed patch are #407 and #408.",
+        "prepared_at": "2026-11-18T12:00:08Z"
+      }
+    }
+  ]
+}
